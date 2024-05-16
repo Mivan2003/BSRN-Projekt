@@ -1,7 +1,10 @@
+import time
+import random
+
 print("Wollen Sie den Resscourcenvektor selbst angeben oder aus einer Datei zugreifen? ")
 
 while True:
-    #Abfrage ob man den Existing Rescource Vektor selbst eingibt oder durch eine Datei zugreift
+    # Abfrage ob man den Existing Rescource Vektor selbst eingibt oder durch eine Datei zugreift
     eingabe = input('Tippen Sie "d" ein für die Datein oder "s", wenn Sie es selbst eingeben wollen: ')
     if eingabe == "s":
         print("Eingabe ist s")
