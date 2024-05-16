@@ -21,3 +21,33 @@ while True:
         break
     else:
         print("Eingabe war falsch")
+
+# Erstellung der Klassen
+klasse1 = []
+klasse2 = []
+klasse3 = []
+
+# Eine liste mit belegten Ressourcen, um die später wieder freizugeben
+belegt1 = [[], [], []], [[], [], []], [[], [], []]
+
+
+# Erstellung der Ressourcen
+def add_ressource(klasse):
+    for i in range(eResource[klasse - 1]):
+        name = "r." + str(i)
+        # print("Ressource erstellt") Best채tigung der Erstellung
+        if klasse == 1:
+            # Wenn 1, dann wirds in Klasse 1 hinzugefügt usw.
+            klasse1.append(name)
+        elif klasse == 2:
+            klasse2.append(name)
+        elif klasse == 3:
+            klasse3.append(name)
+        else:
+            print("Einfügen der Ressource in die Lise, fehlgeschlagen!")
+
+
+# Erstellung der Ressourcenlisten
+add_ressource(1)
+add_ressource(2)
+add_ressource(3)
