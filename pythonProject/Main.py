@@ -51,3 +51,35 @@ def add_ressource(klasse):
 add_ressource(1)
 add_ressource(2)
 add_ressource(3)
+
+
+def matrix_erstellung(matrix):
+    wahl1 = None
+    while True:
+        if matrix == "Belegungsmatrix":
+            wahl1 = int(input(
+                'Wollen Sie die Belegungsmatrix selbst eingeben "1" oder die, im vorhinein festgelegte Matrix benutzten "2"? '))
+        if wahl1 == 1:
+            print("Die Matrix besteht aus 3 Prozessen und 3 Klassen. "
+                  "Bitte geben Sie nun die Matrix an:")
+            # allgemeine Belegungsliste
+            matrix1 = [
+                [int(input("Prozess 1, Klasse 1: ")), int(input("Prozess 1, Klasse 2: ")),
+                 int(input("Prozess 1, Klasse 3: "))],
+                [int(input("Prozess 2, Klasse 1: ")), int(input("Prozess 2, Klasse 2: ")),
+                 int(input("Prozess 2, Klasse 3: "))],
+                [int(input("Prozess 3, Klasse 1: ")), int(input("Prozess 3, Klasse 2: ")),
+                 int(input("Prozess 3, Klasse 3: "))]]
+            if matrix == "Belegungsmatrix":
+                print(f"\nDie Belegungsmatrix ist: \n{matrix1[0]}\n{matrix1[1]}\n{matrix1[2]}\n")
+        elif wahl1 == 2:
+            if matrix == "Belegungsmatrix":
+                matrix = [[1, 0, 1],
+                          [0, 1, 0],
+                          [0, 0, 2]]
+                print(f"\nDie Belegungsmatrix ist: \n{matrix[0]}\n{matrix[1]}\n{matrix[2]}\n")
+                return matrix
+
+
+# Erstellung der Belegungsmatrix
+alloc = matrix_erstellung("Belegungsmatrix")
