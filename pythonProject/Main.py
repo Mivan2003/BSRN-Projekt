@@ -59,6 +59,9 @@ def matrix_erstellung(matrix):
         if matrix == "Belegungsmatrix":
             wahl1 = int(input(
                 'Wollen Sie die Belegungsmatrix selbst eingeben "1" oder die, im vorhinein festgelegte Matrix benutzten "2"? '))
+        elif matrix == "Anforderungsmatrix":
+            wahl1 = int(input(
+                'Wollen Sie die Anforderungsmatrix selbst eingeben "1" oder eine zufällige Matrix generieren lassen "2"? '))
         if wahl1 == 1:
             print("Die Matrix besteht aus 3 Prozessen und 3 Klassen. "
                   "Bitte geben Sie nun die Matrix an:")
@@ -72,6 +75,9 @@ def matrix_erstellung(matrix):
                  int(input("Prozess 3, Klasse 3: "))]]
             if matrix == "Belegungsmatrix":
                 print(f"\nDie Belegungsmatrix ist: \n{matrix1[0]}\n{matrix1[1]}\n{matrix1[2]}\n")
+            elif matrix == "Anforderungsmatrix":
+                print(f"\nDie Anforderungsmatrix ist: \n{matrix1[0]}\n{matrix1[1]}\n{matrix1[2]}\n")
+            return matrix1
         elif wahl1 == 2:
             if matrix == "Belegungsmatrix":
                 matrix = [[1, 0, 1],
@@ -79,6 +85,17 @@ def matrix_erstellung(matrix):
                           [0, 0, 2]]
                 print(f"\nDie Belegungsmatrix ist: \n{matrix[0]}\n{matrix[1]}\n{matrix[2]}\n")
                 return matrix
+
+            elif matrix == "Anforderungsmatrix":
+                rows = 3
+                cols = 3
+                max_values_per_row = [eResource[0], eResource[1], eResource[2]]  # Maximalwerte pro Zeile
+                matrix = [[random.randint(0, max_values_per_row[row]) for _ in range(cols)] for row in range(rows)]
+                # Ausgabe der Anforderungsmatrix
+                print(f"\nDie Anforderungsmatrix ist: \n{matrix[0]}\n{matrix[1]}\n{matrix[2]}\n")
+                return matrix
+        else:
+            print("Die Eingabe war falsch! Bitte Option '1' oder '2' wählen!\n")
 
 
 # Erstellung der Belegungsmatrix
