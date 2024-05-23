@@ -4,7 +4,7 @@ import random
 print("Wollen Sie den Resscourcenvektor selbst angeben oder aus einer Datei zugreifen? ")
 
 while True:
-    # Abfrage ob man den Existing Rescource Vektor selbst eingibt oder durch eine Datei zugreift
+    # Abfrage, ob man den Existing Rescource Vektor selbst eingibt oder durch eine Datei zugreift
     eingabe = input('Tippen Sie "d" ein für die Datein oder "s", wenn Sie es selbst eingeben wollen: ')
     if eingabe == "s":
         print("Eingabe ist s")
@@ -100,3 +100,30 @@ def matrix_erstellung(matrix):
 
 # Erstellung der Belegungsmatrix
 alloc = matrix_erstellung("Belegungsmatrix")
+
+
+def ressourcen_belegung(prozess, matrix):
+    beListe = matrix[prozess - 1]
+    if len(klasse1) >= beListe[0]:  # Prüft, ob es überhaupt noch verfügbare Ressourcen gibt
+        for i in range(beListe[0]):
+            r = klasse1.pop(0)  # zeigt und entfernt die erste ressource
+            belegt1[0][prozess - 1].append(r)  # Macht die belegten Ressourcen zur Übersicht in eine Liste
+            # print(f"Prozess {prozess} belegt Ressource der Klasse 1 ")
+    else:
+        print(f"Prozess {prozess} kann die Ressource der Klasse 1 nicht belegen!")  # Ressource ist nicht verfügbar
+
+    if len(klasse2) >= beListe[1]:
+        for i in range(beListe[1]):
+            r = klasse2.pop(0)  # zeigt und entfernt die zweite ressource
+            belegt1[1][prozess - 1].append(r)
+            # print(f"Prozess {prozess} belegt Ressource der Klasse 2 ")
+    else:
+        print(f"Prozess {prozess} kann die Ressource der Klasse 2 nicht belegen!")
+
+    if len(klasse3) >= beListe[2]:
+        for i in range(beListe[2]):
+            r = klasse3.pop(0)  # zeigt und entfernt die dritte ressource
+            belegt1[2][prozess - 1].append(r)
+            # print(f"Prozess {prozess} belegt Ressource der Klasse 3 ")
+    else:
+        print(f"Prozess {prozess} kann die Ressource der Klasse 3 nicht belegen!")
