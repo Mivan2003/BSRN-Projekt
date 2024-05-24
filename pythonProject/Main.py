@@ -127,3 +127,33 @@ def ressourcen_belegung(prozess, matrix):
             # print(f"Prozess {prozess} belegt Ressource der Klasse 3 ")
     else:
         print(f"Prozess {prozess} kann die Ressource der Klasse 3 nicht belegen!")
+
+
+# Einfach nur fürs Design
+print("Ressourcenrestvektor wird berechnet... ")
+
+time.sleep(2)
+
+# Überprüft, ob ein Prozess schon einmal komplett durchlaufen ist
+wenn_ausgefuehrt = False
+wenn_ausgefuehrt2 = False
+wenn_ausgefuehrt3 = False
+
+
+# Überprüfung, ob ein Deadlock vorhanden ist
+def pruefe_deadlock(prozess):
+    global wenn_ausgefuehrt
+    global wenn_ausgefuehrt2
+    global wenn_ausgefuehrt3
+
+    beListe = req[prozess - 1]
+    # Prüft, ein Prozess durchgeführt werden kann
+    if len(klasse1) >= beListe[0] and len(klasse2) >= beListe[1] and len(klasse3) >= beListe[2]:
+        if not wenn_ausgefuehrt and prozess == 1:
+            return False
+        if not wenn_ausgefuehrt2 and prozess == 2:
+            return False
+        if not wenn_ausgefuehrt3 and prozess == 3:
+            return False
+    else:
+        return True
