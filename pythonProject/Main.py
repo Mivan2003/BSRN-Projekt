@@ -157,3 +157,16 @@ def pruefe_deadlock(prozess):
             return False
     else:
         return True
+
+
+# Nachdem ein Programm durchlaufen ist, werden die Ressourcen freigegeben
+def freigabe(prozess):
+    for i in range(len(belegt1[0][prozess - 1])):
+        re = belegt1[0][prozess - 1].pop(0)
+        klasse1.append(re)
+    for i in range(len(belegt1[1][prozess - 1])):
+        re = belegt1[1][prozess - 1].pop(0)
+        klasse2.append(re)
+    for i in range(len(belegt1[2][prozess - 1])):
+        re = belegt1[2][prozess - 1].pop(0)
+        klasse3.append(re)
