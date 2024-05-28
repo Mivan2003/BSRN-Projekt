@@ -196,3 +196,37 @@ while True:
         if option is None:
             print("\nEs ist ein Deadlock entstanden!")
             break
+        if eingabe == "s":
+            abfrage = int(input('\nWelcher Prozess soll durchgeführt werden? '
+                                '\nWenn das Programm automatisch laufen soll, dann tippen sie "0" ein. '))
+            if not abfrage == 0:
+                ressourcen_belegung(abfrage, req)
+                freigabe(abfrage)
+                if abfrage == 1:
+                    wenn_ausgefuehrt = True
+                elif abfrage == 2:
+                    wenn_ausgefuehrt2 = True
+                elif abfrage == 3:
+                    wenn_ausgefuehrt3 = True
+            elif abfrage == 0:
+                ressourcen_belegung(option, req)
+                freigabe(option)
+                if option == 1:
+                    wenn_ausgefuehrt = True
+                elif option == 2:
+                    wenn_ausgefuehrt2 = True
+                elif option == 3:
+                    wenn_ausgefuehrt3 = True
+                eingabe = "d"
+            else:
+                "Falsche Eingabe!"
+
+        elif eingabe == "d":
+            ressourcen_belegung(option, req)
+            freigabe(option)
+            if option == 1:
+                wenn_ausgefuehrt = True
+            elif option == 2:
+                wenn_ausgefuehrt2 = True
+            elif option == 3:
+                wenn_ausgefuehrt3 = True
