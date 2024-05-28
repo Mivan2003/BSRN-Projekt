@@ -170,3 +170,29 @@ def freigabe(prozess):
     for i in range(len(belegt1[2][prozess - 1])):
         re = belegt1[2][prozess - 1].pop(0)
         klasse3.append(re)
+
+# Die Deadlock Erkennung
+while True:
+    # Überprüft, ob bereits am Anfang ein Deadlock entstanden ist
+    if pruefe_deadlock(1) and pruefe_deadlock(2) and pruefe_deadlock(3):
+        print("Ein Deadlock ist entstanden")
+        break
+    else:
+        # Wenn ein Prozess bereits vollendet wurde, wird es nicht mehr angezeigt
+        option = None
+        if not pruefe_deadlock(1):
+            if not wenn_ausgefuehrt:
+                print(f"Prozess {1} kann durchgeführt werden!")
+                option = 1
+        if not pruefe_deadlock(2):
+            if not wenn_ausgefuehrt2:
+                print(f"Prozess {2} kann durchgeführt werden!")
+                option = 2
+        if not pruefe_deadlock(3):
+            if not wenn_ausgefuehrt3:
+                print(f"Prozess {3} kann durchgeführt werden!")
+                option = 3
+        time.sleep(1)
+        if option is None:
+            print("\nEs ist ein Deadlock entstanden!")
+            break
