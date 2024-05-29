@@ -171,6 +171,22 @@ def freigabe(prozess):
         re = belegt1[2][prozess - 1].pop(0)
         klasse3.append(re)
 
+# Die Ressourcen der Belegungsmatrix werden belegt
+ressourcen_belegung(1, alloc)
+ressourcen_belegung(2, alloc)
+ressourcen_belegung(3, alloc)
+
+# print(belegt1) # Nur zur überprüfung- wird später nicht benötigt
+
+# rRestVektor = [klasse1, klasse2, klasse3] # Nur zur überprüfung- wird später nicht benötigt
+rRessource = [len(klasse1), len(klasse2), len(klasse3)]  # Ressourcenrestvektor
+
+# Der erste Ressourcenrestvektor nach der Belegungsmatrix
+print(f"\nDer Ressourcenrestvektor ist: {rRessource}\n")  # Ausgabe des Ressourcenrestvektors
+
+# Erstellung der Anforderungsmatrix
+req = matrix_erstellung("Anforderungsmatrix")
+
 # Die Deadlock Erkennung
 while True:
     # Überprüft, ob bereits am Anfang ein Deadlock entstanden ist
@@ -196,6 +212,7 @@ while True:
         if option is None:
             print("\nEs ist ein Deadlock entstanden!")
             break
+
         if eingabe == "s":
             abfrage = int(input('\nWelcher Prozess soll durchgeführt werden? '
                                 '\nWenn das Programm automatisch laufen soll, dann tippen sie "0" ein. '))
@@ -230,4 +247,12 @@ while True:
                 wenn_ausgefuehrt2 = True
             elif option == 3:
                 wenn_ausgefuehrt3 = True
-#test 
+
+    # Gibt den neuen Ressourcenrestvektor aus
+    rRessource2 = [len(klasse1), len(klasse2), len(klasse3)]
+    print(f"\nDer Ressourcenrestvektor ist: {rRessource2}\n")
+
+    # Wenn kein Programm mehr durchlaufen kann, dann wird ein Deadlock festgestellt
+    if rRessource2 == eResource:
+        print("\nEs ist kein Deadlock entstanden!")
+        break
