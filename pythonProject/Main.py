@@ -212,6 +212,7 @@ while True:
         if option is None:
             print("\nEs ist ein Deadlock entstanden!")
             break
+
         if eingabe == "s":
             abfrage = int(input('\nWelcher Prozess soll durchgeführt werden? '
                                 '\nWenn das Programm automatisch laufen soll, dann tippen sie "0" ein. '))
@@ -246,3 +247,12 @@ while True:
                 wenn_ausgefuehrt2 = True
             elif option == 3:
                 wenn_ausgefuehrt3 = True
+
+    # Gibt den neuen Ressourcenrestvektor aus
+    rRessource2 = [len(klasse1), len(klasse2), len(klasse3)]
+    print(f"\nDer Ressourcenrestvektor ist: {rRessource2}\n")
+
+    # Wenn kein Programm mehr durchlaufen kann, dann wird ein Deadlock festgestellt
+    if rRessource2 == eResource:
+        print("\nEs ist kein Deadlock entstanden!")
+        break
