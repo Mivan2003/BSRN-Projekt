@@ -3,43 +3,49 @@ import random
 import logging
 
 # Logging-Konfiguration für Logdatei-Dokumentation
-logging.basicConfig(filename="deadlock_simulation.log", level=logging.INFO)
+logging.basicConfig(
+    filename=input("Geben Sie bitte den Dateinamen oder Pfad ein, indem der Simulator dokumentiert werden soll: "),
+    level=logging.INFO)
 logger = logging.getLogger('DeadlockSimulator')
-
-logger.info("Simulator startet...")
 
 # Die noch leere liste des Ressourcenvektors
 eResource = []
 # Damit man weiß ob Datei eingelesen werden soll oder ob man selbst schreiben will
 eingabe = ""
 
-logger.info("Abfrage ob Datei oder selbst Eingabe...")
-print("Wollen Sie den Ressourcenvektor selbst angeben oder es aus einer Datei ablesen? ")
-# Abfrage, ob man den Ressourcenvektor selbst eingibt oder durch eine Datei zugreift
-while True:
-    eingabe = input('Tippen Sie "d" ein für die Dateien oder "s", wenn Sie es selbst eingeben wollen: ')
-    if eingabe == "s":
-        # Erstellung des Ressourcenvektors durch eigene Eingabe
-        print("\nGeben Sie nun die Ressourcen ein: ")
-        eResource = [int(input("Klasse 1: ")), int(input("Klasse 2: ")), int(input("Klasse 3: "))]
-        print(f"\nDer Ressourcenvektor ist: {eResource}\n")
-        logger.info("Selbst Eingabe wird gewählt...")
-        break
-    elif eingabe == "d":
-        # Erstellung des Ressourcenvektors mithilfe einer Datei
-        datei = input("\nGeben Sie den Dateinamen ein: ")
-        with open(datei, 'r') as file:
-            # Lies die Zeilen der Datei und entferne Leerzeichen und Zeilenumbrüche
-            lines = file.readlines()
-            # Konvertiere die Zeichenketten in Ganzzahlen und füge sie der Liste hinzu
-            eResource = [int(line.strip()) for line in lines]
-        print(f"\nDer Ressourcenvektor ist: {eResource}\n")
-        logger.info("Datei wird gewählt...")
-        break
-    else:
-        print("Eingabe war falsch")
-        logger.info("Die Eingabe war falsch, der Benutzer soll es erneut versuchen...")
-logger.info(f"\nRessourcenvektor eingegeben: {eResource}\n")
+
+# Abfrage am Anfang
+def abfrage():
+    global eResource
+    global eingabe
+    logger.info("Abfrage ob Datei oder selbst Eingabe...")
+    print("Wollen Sie den Ressourcenvektor selbst angeben oder es aus einer Datei ablesen? ")
+    # Abfrage, ob man den Ressourcenvektor selbst eingibt oder durch eine Datei zugreift
+    while True:
+        eingabe = input('Tippen Sie "d" ein für die Dateien oder "s", wenn Sie es selbst eingeben wollen: ')
+        if eingabe == "s":
+            # Erstellung des Ressourcenvektors durch eigene Eingabe
+            print("\nGeben Sie nun die Ressourcen ein: ")
+            eResource = [int(input("Klasse 1: ")), int(input("Klasse 2: ")), int(input("Klasse 3: "))]
+            print(f"\nDer Ressourcenvektor ist: {eResource}\n")
+            logger.info("Selbst Eingabe wird gewählt...")
+            break
+        elif eingabe == "d":
+            # Erstellung des Ressourcenvektors mithilfe einer Datei
+            datei = input("\nGeben Sie den Dateinamen ein: ")
+            with open(datei, 'r') as file:
+                # Lies die Zeilen der Datei und entferne Leerzeichen und Zeilenumbrüche
+                lines = file.readlines()
+                # Konvertiere die Zeichenketten in Ganzzahlen und füge sie der Liste hinzu
+                eResource = [int(line.strip()) for line in lines]
+            print(f"\nDer Ressourcenvektor ist: {eResource}\n")
+            logger.info("Datei wird gewählt...")
+            break
+        else:
+            print("Eingabe war falsch")
+            logger.info("Die Eingabe war falsch, der Benutzer soll es erneut versuchen...")
+    logger.info(f"Ressourcenvektor eingegeben: {eResource}\n")
+
 
 # Erstellung der Klassen
 klasse1 = []
@@ -49,11 +55,10 @@ klasse3 = []
 # Eine liste mit belegten Ressourcen, um die später wieder freizugeben
 belegt1 = [[], [], []], [[], [], []], [[], [], []]
 
-logger.info("Im Hintergrund werden die benötigten Ressourcen in Listen erstellt...")
-
 
 # Erstellung der Ressourcen
 def add_ressource(klasse):
+    logger.info("Im Hintergrund werden die benötigten Ressourcen in Listen erstellt...")
     for i in range(eResource[klasse - 1]):
         name = "r." + str(i)
         # print("Ressource erstellt") Bestätigung der Erstellung
@@ -69,12 +74,6 @@ def add_ressource(klasse):
             logger.info("Bei der erstellung der Liste ist ein Fehler aufgetreten...")
 
 
-# Erstellung der Ressourcenlisten
-add_ressource(1)
-add_ressource(2)
-add_ressource(3)
-
-
 # Nur zur überprüfung- wird später nicht benötigt
 # rVektor = [klasse1, klasse2, klasse3]
 # print(rVektor)
@@ -84,14 +83,17 @@ def matrix_erstellung(matrix):
     while True:
         if matrix == "Belegungsmatrix":
             wahl1 = int(input(
-                'Wollen Sie die Belegungsmatrix selbst eingeben "1" oder die, im vorhinein festgelegte Matrix benutzten "2"? '))
+                'Wollen Sie die Belegungsmatrix selbst eingeben "1" oder die, im vorhinein festgelegte Matrix '
+                'benutzten "2"? '))
             logger.info(
                 "Abfrage ob Belegungsmatrix selbst eingegeben wird oder eine voreingestellte Matrix benutzt wird...")
         elif matrix == "Anforderungsmatrix":
             wahl1 = int(input(
-                'Wollen Sie die Anforderungsmatrix selbst eingeben "1" oder eine zufällige Matrix generieren lassen "2"? '))
+                'Wollen Sie die Anforderungsmatrix selbst eingeben "1" oder eine zufällige Matrix generieren lassen '
+                '"2"? '))
             logger.info(
-                "Abfrage ob Anforderungsmatrix selbst eingegeben wird oder eine zufällige Matrix generiert werden soll...")
+                "Abfrage ob Anforderungsmatrix selbst eingegeben wird oder eine zufällige Matrix generiert werden "
+                "soll...")
         if wahl1 == 1:
             print("Die Matrix besteht aus 3 Prozessen und 3 Klassen. "
                   "Bitte geben Sie nun die Matrix an:")
@@ -132,13 +134,6 @@ def matrix_erstellung(matrix):
             logger.info("Es wurde nicht Option 1 oder 2 gewählt, der Benutzter soll es erneut versuchen...")
 
 
-logger.info(f"Belegungsmatrix wird erstellt...")
-
-# Erstellung der Belegungsmatrix
-alloc = matrix_erstellung("Belegungsmatrix")
-logger.info(f"Belegungsmatrix ist: \n{alloc[0]}\n{alloc[1]}\n{alloc[2]}\n")
-
-
 # Dadurch werden die Ressourcen der Belegungsmatrix blockiert
 def ressourcen_belegung(prozess, matrix):
     logger.info(f"Die Ressourcen des {prozess}. Prozess werden belegt...")
@@ -167,12 +162,6 @@ def ressourcen_belegung(prozess, matrix):
     else:
         print(f"Prozess {prozess} kann die Ressource der Klasse 3 nicht belegen!")
 
-
-# Einfach nur fürs Design
-print("Ressourcenrestvektor wird berechnet... ")
-logger.info(f"Ressourcenvektor wird berechnet...")
-
-time.sleep(2)
 
 # Überprüft, ob ein Prozess schon einmal komplett durchlaufen ist
 wenn_ausgefuehrt = False
@@ -213,112 +202,149 @@ def freigabe(prozess):
         klasse3.append(re)
 
 
-# Die Ressourcen der Belegungsmatrix werden belegt
-ressourcen_belegung(1, alloc)
-ressourcen_belegung(2, alloc)
-ressourcen_belegung(3, alloc)
-
 # print(belegt1) # Nur zur überprüfung- wird später nicht benötigt
 
-# rRestVektor = [klasse1, klasse2, klasse3] # Nur zur überprüfung- wird später nicht benötigt
-rRessource = [len(klasse1), len(klasse2), len(klasse3)]  # Ressourcenrestvektor
+def r_vektor():
+    global rRessource
+    rRessource = [len(klasse1), len(klasse2), len(klasse3)]
+    print(f"\nDer Ressourcenrestvektor ist: {rRessource}\n")  # Ausgabe des Ressourcenrestvektors
+    logger.info(f"Ressourcenrestvektor ist: {rRessource}\n")
+    return rRessource
 
-# Der erste Ressourcenrestvektor nach der Belegungsmatrix
-print(f"\nDer Ressourcenrestvektor ist: {rRessource}\n")  # Ausgabe des Ressourcenrestvektors
-logger.info(f"\nRessourcenrestvektor ist: {rRessource}\n")
 
 # Erstellung der Anforderungsmatrix
-req = matrix_erstellung("Anforderungsmatrix")
-logger.info(f"Anforderungsmatrix ist: \n{req[0]}\n{req[1]}\n{req[2]}\n")
+req = [[], [], []]
+
+
+# Programm soll selbst entscheiden
+def zufall():
+    global option
+    global wenn_ausgefuehrt
+    global wenn_ausgefuehrt2
+    global wenn_ausgefuehrt3
+    logger.info(f"Der Simulator soll zufällig bestimmen, welcher Prozess ausgeführt werden soll...")
+    ressourcen_belegung(option, req)
+    freigabe(option)
+    if option == 1:
+        logger.info(f"Prozess 1 wurde ausgeführt...")
+        wenn_ausgefuehrt = True
+        option = 0
+    elif option == 2:
+        logger.info(f"Prozess 2 wurde ausgeführt...")
+        wenn_ausgefuehrt2 = True
+        option = 0
+    elif option == 3:
+        logger.info(f"Prozess 3 wurde ausgeführt...")
+        wenn_ausgefuehrt3 = True
+        option = 0
+
+
+option = 0
+
 
 # Die Deadlock Erkennung
-while True:
-    # Überprüft, ob bereits am Anfang ein Deadlock entstanden ist
-    if pruefe_deadlock(1) and pruefe_deadlock(2) and pruefe_deadlock(3):
-        print("Ein Deadlock ist entstanden")
-        logger.info(f"Es ist ein Deadlock entstanden...")
-        logger.info(f"Simulator beendet!\n\n ")
-        break
-    else:
-        # Wenn ein Prozess bereits vollendet wurde, wird es nicht mehr angezeigt
-        option = None
-        if not pruefe_deadlock(1):
-            if not wenn_ausgefuehrt:
-                print(f"Prozess {1} kann durchgeführt werden!")
-                logger.info(f"Prozess {1} kann durchgeführt werden!")
-                option = 1
-        if not pruefe_deadlock(2):
-            if not wenn_ausgefuehrt2:
-                print(f"Prozess {2} kann durchgeführt werden!")
-                logger.info(f"Prozess {2} kann durchgeführt werden!")
-                option = 2
-        if not pruefe_deadlock(3):
-            if not wenn_ausgefuehrt3:
-                print(f"Prozess {3} kann durchgeführt werden!")
-                logger.info(f"Prozess {3} kann durchgeführt werden!")
-                option = 3
-        time.sleep(1)
-        if option is None:
-            print("\nEs ist ein Deadlock entstanden!")
+def deadlock_erkennung():
+    global eingabe
+    global option
+    global wenn_ausgefuehrt
+    global wenn_ausgefuehrt2
+    global wenn_ausgefuehrt3
+    while True:
+        # Überprüft, ob bereits am Anfang ein Deadlock entstanden ist
+        if pruefe_deadlock(1) and pruefe_deadlock(2) and pruefe_deadlock(3):
+            print("Ein Deadlock ist entstanden")
             logger.info(f"Es ist ein Deadlock entstanden...")
             logger.info(f"Simulator beendet!\n\n ")
             break
+        else:
+            # Wenn ein Prozess bereits vollendet wurde, wird es nicht mehr angezeigt
+            if not pruefe_deadlock(1):
+                if not wenn_ausgefuehrt:
+                    print(f"Prozess {1} kann durchgeführt werden!")
+                    logger.info(f"Prozess {1} kann durchgeführt werden!")
+                    option = 1
+            if not pruefe_deadlock(2):
+                if not wenn_ausgefuehrt2:
+                    print(f"Prozess {2} kann durchgeführt werden!")
+                    logger.info(f"Prozess {2} kann durchgeführt werden!")
+                    option = 2
+            if not pruefe_deadlock(3):
+                if not wenn_ausgefuehrt3:
+                    print(f"Prozess {3} kann durchgeführt werden!")
+                    logger.info(f"Prozess {3} kann durchgeführt werden!")
+                    option = 3
+            time.sleep(1)
+            if option == 0:
+                print("\nEs ist ein Deadlock entstanden!")
+                logger.info(f"Es ist ein Deadlock entstanden...")
+                logger.info(f"Simulator beendet!\n\n ")
+                break
 
-        if eingabe == "s":
-            logger.info(f"Abfrage welcher Prozess ausgeführt werden soll...")
-            abfrage = int(input('\nWelcher Prozess soll durchgeführt werden? '
-                                '\nWenn das Programm automatisch laufen soll, dann tippen sie "0" ein. '))
-            if not abfrage == 0:
-                ressourcen_belegung(abfrage, req)
-                freigabe(abfrage)
-                if abfrage == 1:
-                    logger.info(f"Prozess 1 wurde ausgeführt...")
-                    wenn_ausgefuehrt = True
-                elif abfrage == 2:
-                    logger.info(f"Prozess 2 wurde ausgeführt...")
-                    wenn_ausgefuehrt2 = True
-                elif abfrage == 3:
-                    logger.info(f"Prozess 3 wurde ausgeführt...")
-                    wenn_ausgefuehrt3 = True
-            elif abfrage == 0:
-                logger.info(f"Zufälliger Prozess wurde ausgeführt...")
-                ressourcen_belegung(option, req)
-                freigabe(option)
-                if option == 1:
-                    logger.info(f"Prozess 1 wurde ausgeführt...")
-                    wenn_ausgefuehrt = True
-                elif option == 2:
-                    logger.info(f"Prozess 2 wurde ausgeführt...")
-                    wenn_ausgefuehrt2 = True
-                elif option == 3:
-                    logger.info(f"Prozess 3 wurde ausgeführt...")
-                    wenn_ausgefuehrt3 = True
-                eingabe = "d"
-            else:
-                "Falsche Eingabe!"
+            if eingabe == "s":
+                logger.info(f"Abfrage welcher Prozess ausgeführt werden soll...")
+                abfrage = int(input('\nWelcher Prozess soll durchgeführt werden? '
+                                    '\nWenn das Programm automatisch laufen soll, dann tippen sie "0" ein. '))
+                if not abfrage == 0:
+                    ressourcen_belegung(abfrage, req)
+                    freigabe(abfrage)
+                    if abfrage == 1:
+                        logger.info(f"Prozess 1 wurde ausgeführt...")
+                        wenn_ausgefuehrt = True
+                    elif abfrage == 2:
+                        logger.info(f"Prozess 2 wurde ausgeführt...")
+                        wenn_ausgefuehrt2 = True
+                    elif abfrage == 3:
+                        logger.info(f"Prozess 3 wurde ausgeführt...")
+                        wenn_ausgefuehrt3 = True
+                elif abfrage == 0:
+                    zufall()
+                    eingabe = "d"
+                else:
+                    "Falsche Eingabe!"
 
-        elif eingabe == "d":
-            logger.info(f"Der Simulator soll zufällig bestimmen, welcher Prozess ausgeführt werden soll...")
-            ressourcen_belegung(option, req)
-            freigabe(option)
-            if option == 1:
-                logger.info(f"Prozess 1 wurde ausgeführt...")
-                wenn_ausgefuehrt = True
-            elif option == 2:
-                logger.info(f"Prozess 2 wurde ausgeführt...")
-                wenn_ausgefuehrt2 = True
-            elif option == 3:
-                logger.info(f"Prozess 3 wurde ausgeführt...")
-                wenn_ausgefuehrt3 = True
+            elif eingabe == "d":
+                zufall()
 
-    # Gibt den neuen Ressourcenrestvektor aus
-    rRessource2 = [len(klasse1), len(klasse2), len(klasse3)]
-    print(f"\nDer Ressourcenrestvektor ist: {rRessource2}\n")
-    logger.info(f"\nDer neue Ressourcenrestvektor ist: {rRessource2}\n")
+        # Wenn kein Programm mehr durchlaufen kann, dann wird ein Deadlock festgestellt
+        if r_vektor() == eResource:
+            print("\nEs ist kein Deadlock entstanden!")
+            logger.info(f"Es ist kein Deadlock entstanden...")
+            logger.info(f"Simulator beendet!\n\n ")
+            break
 
-    # Wenn kein Programm mehr durchlaufen kann, dann wird ein Deadlock festgestellt
-    if rRessource2 == eResource:
-        print("\nEs ist kein Deadlock entstanden!")
-        logger.info(f"Es ist kein Deadlock entstanden...")
-        logger.info(f"Simulator beendet!\n\n ")
-        break
+
+def main():
+    global req
+    logger.info("Simulator startet...")
+    abfrage()
+
+    add_ressource(1)
+    add_ressource(2)
+    add_ressource(3)
+
+    logger.info(f"Belegungsmatrix wird erstellt...")
+    # Erstellung der Belegungsmatrix
+    alloc = matrix_erstellung("Belegungsmatrix")
+    logger.info(f"Belegungsmatrix ist: \n{alloc[0]}\n{alloc[1]}\n{alloc[2]}\n")
+
+    # Einfach nur fürs Design
+    print("Ressourcenrestvektor wird berechnet... ")
+    logger.info(f"Ressourcenvektor wird berechnet...")
+    time.sleep(1)
+
+    # Die Ressourcen der Belegungsmatrix werden belegt
+    ressourcen_belegung(1, alloc)
+    ressourcen_belegung(2, alloc)
+    ressourcen_belegung(3, alloc)
+
+    r_vektor()
+
+    # Erstellung der Anforderungsmatrix
+    req = matrix_erstellung("Anforderungsmatrix")
+    logger.info(f"Anforderungsmatrix ist: \n{req[0]}\n{req[1]}\n{req[2]}\n")
+
+    deadlock_erkennung()
+
+
+if __name__ == '__main__':
+    main()
