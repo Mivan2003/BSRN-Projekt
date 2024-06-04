@@ -1,51 +1,57 @@
 import time
-import random
 import logging
+import argparse
+
+# Argument Parser für Kommandozeilen-Argumente
+parser = argparse.ArgumentParser(description='Deadlock Simulator')
+parser.add_argument('-l', '--logfile', type=str, default='simulator.log', help='Logdatei')
+parser.add_argument('-mode', '--input_mode', type=str, choices=['s', 'd'], required=True,
+                    help="Eingabemodus: 's' für selbst eingeben, 'd' für Datei")
+parser.add_argument('-f', '--file', type=str, help='Datei zum Einlesen des Ressourcenvektors')
+parser.add_argument('-bm', '--belegungsmatrix', type=str, help='Belegungsmatrixdatei')
+parser.add_argument('-am', '--anforderungsmatrix', type=str, help='Anforderungsmatrixdatei')
+args = parser.parse_args()
 
 # Logging-Konfiguration für Logdatei-Dokumentation
 logging.basicConfig(
-    filename=input("Geben Sie bitte den Dateinamen oder Pfad ein, indem der Simulator dokumentiert werden soll: "),
-    level=logging.INFO)
+    filename=args.logfile, level=logging.INFO)
 logger = logging.getLogger('DeadlockSimulator')
 
 # Die noch leere liste des Ressourcenvektors
 eResource = []
 # Damit man weiß ob Datei eingelesen werden soll oder ob man selbst schreiben will
-eingabe = ""
+eingabe = args.input_mode
 
 
 # Abfrage am Anfang
-def abfrage():
+def mode():
     global eResource
     global eingabe
-    logger.info("Abfrage ob Datei oder selbst Eingabe...")
-    print("Wollen Sie den Ressourcenvektor selbst angeben oder es aus einer Datei ablesen? ")
     # Abfrage, ob man den Ressourcenvektor selbst eingibt oder durch eine Datei zugreift
-    while True:
-        eingabe = input('Tippen Sie "d" ein für die Dateien oder "s", wenn Sie es selbst eingeben wollen: ')
-        if eingabe == "s":
-            # Erstellung des Ressourcenvektors durch eigene Eingabe
-            print("\nGeben Sie nun die Ressourcen ein: ")
-            eResource = [int(input("Klasse 1: ")), int(input("Klasse 2: ")), int(input("Klasse 3: "))]
-            print(f"\nDer Ressourcenvektor ist: {eResource}\n")
-            logger.info("Selbst Eingabe wird gewählt...")
-            break
-        elif eingabe == "d":
-            # Erstellung des Ressourcenvektors mithilfe einer Datei
-            datei = input("\nGeben Sie den Dateinamen ein: ")
-            with open(datei, 'r') as file:
-                # Lies die Zeilen der Datei und entferne Leerzeichen und Zeilenumbrüche
-                lines = file.readlines()
-                # Konvertiere die Zeichenketten in Ganzzahlen und füge sie der Liste hinzu
-                eResource = [int(line.strip()) for line in lines]
-            print(f"\nDer Ressourcenvektor ist: {eResource}\n")
-            logger.info("Datei wird gewählt...")
-            break
-        else:
-            print("Eingabe war falsch")
-            logger.info("Die Eingabe war falsch, der Benutzer soll es erneut versuchen...")
-    logger.info(f"Ressourcenvektor eingegeben: {eResource}\n")
+    if args.input_mode == "s":
+        # Erstellung des Ressourcenvektors durch eigene Eingabe
+        print("\nGeben Sie nun die Ressourcen ein: ")
+        eResource = [int(input("Klasse 1: ")), int(input("Klasse 2: ")), int(input("Klasse 3: "))]
+        print(f"\nDer Ressourcenvektor ist: {eResource}\n")
+        logger.info("Selbst Eingabe wird gewählt...")
 
+    elif args.input_mode == "d":
+        # Erstellung des Ressourcenvektors mithilfe einer Datei
+        datei = args.file
+        with open(datei, 'r') as file:
+            # Lies die Zeilen der Datei und entferne Leerzeichen und Zeilenumbrüche
+            lines = file.readlines()
+            # Konvertiere die Zeichenketten in Ganzzahlen und füge sie der Liste hinzu
+            eResource = [int(line.strip()) for line in lines]
+        print(f"\nDer Ressourcenvektor ist: {eResource}\n")
+        logger.info("Datei wird gewählt...")
+
+    else:
+        print("Eingabe war falsch")
+        logger.info("Die Eingabe war falsch, der Benutzer soll es erneut versuchen...")
+
+
+logger.info(f"Ressourcenvektor eingegeben: {eResource}\n")
 
 # Erstellung der Klassen
 klasse1 = []
@@ -58,7 +64,6 @@ belegt1 = [[], [], []], [[], [], []], [[], [], []]
 
 # Erstellung der Ressourcen
 def add_ressource(klasse):
-    logger.info("Im Hintergrund werden die benötigten Ressourcen in Listen erstellt...")
     for i in range(eResource[klasse - 1]):
         name = "r." + str(i)
         # print("Ressource erstellt") Bestätigung der Erstellung
@@ -78,26 +83,47 @@ def add_ressource(klasse):
 # rVektor = [klasse1, klasse2, klasse3]
 # print(rVektor)
 
+ausgefuehrt = False
+ausgefuehrt2 = False
+
+
 def matrix_erstellung(matrix):
-    wahl1 = None
+    global ausgefuehrt
+    global ausgefuehrt2
+
     while True:
-        if matrix == "Belegungsmatrix":
-            wahl1 = int(input(
-                'Wollen Sie die Belegungsmatrix selbst eingeben "1" oder die, im vorhinein festgelegte Matrix '
-                'benutzten "2"? '))
-            logger.info(
-                "Abfrage ob Belegungsmatrix selbst eingegeben wird oder eine voreingestellte Matrix benutzt wird...")
-        elif matrix == "Anforderungsmatrix":
-            wahl1 = int(input(
-                'Wollen Sie die Anforderungsmatrix selbst eingeben "1" oder eine zufällige Matrix generieren lassen '
-                '"2"? '))
-            logger.info(
-                "Abfrage ob Anforderungsmatrix selbst eingegeben wird oder eine zufällige Matrix generiert werden "
-                "soll...")
-        if wahl1 == 1:
+        if args.belegungsmatrix and not ausgefuehrt:
+            datei = args.belegungsmatrix
+            with open(datei, 'r') as file:
+                matrix = []
+                for line in file:
+                    # Entferne führende und abschließende Leerzeichen und teile die Zeile in einzelne Elemente
+                    lst = line.strip().split()
+                    # Konvertiere die Elemente in Integer (oder float, falls nötig)
+                    lst = list(map(int, lst))
+                    matrix.append(lst)
+                logger.info("Belegungsmatrix Datei wird eingelesen...")
+                print(f"\nDie Belegungsmatrix ist: \n{matrix[0]}\n{matrix[1]}\n{matrix[2]}\n")
+            ausgefuehrt = True
+            return matrix
+        elif args.anforderungsmatrix and not ausgefuehrt2:
+            datei = args.anforderungsmatrix
+            with open(datei, 'r') as file:
+                matrix = []
+                for line in file:
+                    # Entferne führende und abschließende Leerzeichen und teile die Zeile in einzelne Elemente
+                    lst = line.strip().split()
+                    # Konvertiere die Elemente in Integer (oder float, falls nötig)
+                    lst = list(map(int, lst))
+                    matrix.append(lst)
+                logger.info("Belegungsmatrix Datei wird eingelesen...")
+                print(f"\nDie Anforderungsmatrix ist: \n{matrix[0]}\n{matrix[1]}\n{matrix[2]}\n")
+            ausgefuehrt2 = True
+            return matrix
+        else:
             print("Die Matrix besteht aus 3 Prozessen und 3 Klassen. "
                   "Bitte geben Sie nun die Matrix an:")
-            logger.info("Matrix soll selbst erstellt werden...")
+            logger.info("Matrix wird selbst erstellt werden...")
             # allgemeine Belegungsliste
             matrix1 = [
                 [int(input("Prozess 1, Klasse 1: ")), int(input("Prozess 1, Klasse 2: ")),
@@ -111,27 +137,6 @@ def matrix_erstellung(matrix):
             elif matrix == "Anforderungsmatrix":
                 print(f"\nDie Anforderungsmatrix ist: \n{matrix1[0]}\n{matrix1[1]}\n{matrix1[2]}\n")
             return matrix1
-        elif wahl1 == 2:
-            logger.info("Die voreingestellte Belegungsmatrix soll benutzt werden...")
-            if matrix == "Belegungsmatrix":
-                matrix = [[1, 0, 1],
-                          [0, 1, 0],
-                          [0, 0, 2]]
-                print(f"\nDie Belegungsmatrix ist: \n{matrix[0]}\n{matrix[1]}\n{matrix[2]}\n")
-                return matrix
-
-            elif matrix == "Anforderungsmatrix":
-                logger.info("Eine zufällig erstellte Anforderungsmatrix soll generiert werden...")
-                rows = 3
-                cols = 3
-                max_values_per_row = [eResource[0], eResource[1], eResource[2]]  # Maximalwerte pro Zeile
-                matrix = [[random.randint(0, max_values_per_row[row]) for _ in range(cols)] for row in range(rows)]
-                # Ausgabe der Anforderungsmatrix
-                print(f"\nDie Anforderungsmatrix ist: \n{matrix[0]}\n{matrix[1]}\n{matrix[2]}\n")
-                return matrix
-        else:
-            print("Die Eingabe war falsch! Bitte Option '1' oder '2' wählen!\n")
-            logger.info("Es wurde nicht Option 1 oder 2 gewählt, der Benutzter soll es erneut versuchen...")
 
 
 # Dadurch werden die Ressourcen der Belegungsmatrix blockiert
@@ -280,10 +285,14 @@ def deadlock_erkennung():
                 logger.info(f"Simulator beendet!\n\n ")
                 break
 
-            if eingabe == "s":
+            if args.input_mode == "s":
                 logger.info(f"Abfrage welcher Prozess ausgeführt werden soll...")
                 abfrage = int(input('\nWelcher Prozess soll durchgeführt werden? '
                                     '\nWenn das Programm automatisch laufen soll, dann tippen sie "0" ein. '))
+                logger.info(f'Es wurde "{abfrage}" ausgewählt...')
+
+                ressourcen_belegung(abfrage, req)
+                freigabe(abfrage)
                 if not abfrage == 0:
                     ressourcen_belegung(abfrage, req)
                     freigabe(abfrage)
@@ -298,11 +307,11 @@ def deadlock_erkennung():
                         wenn_ausgefuehrt3 = True
                 elif abfrage == 0:
                     zufall()
-                    eingabe = "d"
+                    args.input_mode = "d"
                 else:
                     "Falsche Eingabe!"
 
-            elif eingabe == "d":
+            elif args.input_mode == "d":
                 zufall()
 
         # Wenn kein Programm mehr durchlaufen kann, dann wird ein Deadlock festgestellt
@@ -316,8 +325,9 @@ def deadlock_erkennung():
 def main():
     global req
     logger.info("Simulator startet...")
-    abfrage()
+    mode()
 
+    logger.info("Im Hintergrund werden die benötigten Ressourcen in Listen erstellt...")
     add_ressource(1)
     add_ressource(2)
     add_ressource(3)
