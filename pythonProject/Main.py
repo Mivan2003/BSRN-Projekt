@@ -58,7 +58,6 @@ belegt1 = [[], [], []], [[], [], []], [[], [], []]
 
 # Erstellung der Ressourcen
 def add_ressource(klasse):
-    logger.info("Im Hintergrund werden die benötigten Ressourcen in Listen erstellt...")
     for i in range(eResource[klasse - 1]):
         name = "r." + str(i)
         # print("Ressource erstellt") Bestätigung der Erstellung
@@ -284,6 +283,7 @@ def deadlock_erkennung():
                 logger.info(f"Abfrage welcher Prozess ausgeführt werden soll...")
                 abfrage = int(input('\nWelcher Prozess soll durchgeführt werden? '
                                     '\nWenn das Programm automatisch laufen soll, dann tippen sie "0" ein. '))
+                logger.info(f'Es wurde "{abfrage}" ausgewählt...')
                 if not abfrage == 0:
                     ressourcen_belegung(abfrage, req)
                     freigabe(abfrage)
@@ -317,7 +317,8 @@ def main():
     global req
     logger.info("Simulator startet...")
     abfrage()
-
+    
+    logger.info("Im Hintergrund werden die benötigten Ressourcen in Listen erstellt...")
     add_ressource(1)
     add_ressource(2)
     add_ressource(3)
