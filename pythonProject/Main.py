@@ -47,10 +47,6 @@ def mode():
         logger.info("Datei wird gewählt...")
         logger.info(f"Ressourcenvektor eingegeben: {eResource}\n")
 
-    else:
-        print("Eingabe war falsch")
-        logger.info("Die Eingabe war falsch, der Benutzer soll es erneut versuchen...")
-
 
 # Erstellung der Klassen
 klasse1 = []
@@ -120,7 +116,7 @@ def matrix_erstellung(matrix):
             ausgefuehrt2 = True
             return matrix
         else:
-            print("Die Matrix besteht aus 3 Prozessen und 3 Klassen. "
+            print(f"Die {matrix}s Matrix besteht aus 3 Prozessen und 3 Klassen. "
                   "Bitte geben Sie nun die Matrix an:")
             logger.info("Matrix wird selbst erstellt werden...")
             # allgemeine Belegungsliste
@@ -179,7 +175,7 @@ def pruefe_deadlock(prozess):
     global wenn_ausgefuehrt2
     global wenn_ausgefuehrt3
 
-    beListe = req[prozess - 1]
+    beListe = anforderung[prozess - 1]
     # Prüft, ein Prozess durchgeführt werden kann
     if len(klasse1) >= beListe[0] and len(klasse2) >= beListe[1] and len(klasse3) >= beListe[2]:
         if not wenn_ausgefuehrt and prozess == 1:
@@ -217,7 +213,7 @@ def r_vektor():
 
 
 # Erstellung der Anforderungsmatrix
-req = [[], [], []]
+anforderung = [[], [], []]
 
 
 # Programm soll selbst entscheiden
@@ -227,7 +223,7 @@ def zufall():
     global wenn_ausgefuehrt2
     global wenn_ausgefuehrt3
     logger.info(f"Der Simulator soll zufällig bestimmen, welcher Prozess ausgeführt werden soll...")
-    ressourcen_belegung(option, req)
+    ressourcen_belegung(option, anforderung)
     freigabe(option)
     if option == 1:
         logger.info(f"Prozess 1 wurde ausgeführt...")
@@ -290,10 +286,10 @@ def deadlock_erkennung():
                                     '\nWenn das Programm automatisch laufen soll, dann tippen sie "0" ein. '))
                 logger.info(f'Es wurde "{abfrage}" ausgewählt...')
 
-                ressourcen_belegung(abfrage, req)
+                ressourcen_belegung(abfrage, anforderung)
                 freigabe(abfrage)
                 if not abfrage == 0:
-                    ressourcen_belegung(abfrage, req)
+                    ressourcen_belegung(abfrage, anforderung)
                     freigabe(abfrage)
                     if abfrage == 1:
                         logger.info(f"Prozess 1 wurde ausgeführt...")
@@ -322,7 +318,7 @@ def deadlock_erkennung():
 
 
 def main():
-    global req
+    global anforderung
     logger.info("Simulator startet...")
     mode()
 
@@ -333,8 +329,8 @@ def main():
 
     logger.info(f"Belegungsmatrix wird erstellt...")
     # Erstellung der Belegungsmatrix
-    alloc = matrix_erstellung("Belegungsmatrix")
-    logger.info(f"Belegungsmatrix ist: \n{alloc[0]}\n{alloc[1]}\n{alloc[2]}\n")
+    belegung = matrix_erstellung("Belegungsmatrix")
+    logger.info(f"Belegungsmatrix ist: \n{belegung[0]}\n{belegung[1]}\n{belegung[2]}\n")
 
     # Einfach nur fürs Design
     print("Ressourcenrestvektor wird berechnet... ")
@@ -342,15 +338,15 @@ def main():
     time.sleep(1)
 
     # Die Ressourcen der Belegungsmatrix werden belegt
-    ressourcen_belegung(1, alloc)
-    ressourcen_belegung(2, alloc)
-    ressourcen_belegung(3, alloc)
+    ressourcen_belegung(1, belegung)
+    ressourcen_belegung(2, belegung)
+    ressourcen_belegung(3, belegung)
 
     r_vektor()
 
     # Erstellung der Anforderungsmatrix
-    req = matrix_erstellung("Anforderungsmatrix")
-    logger.info(f"Anforderungsmatrix ist: \n{req[0]}\n{req[1]}\n{req[2]}\n")
+    anforderung = matrix_erstellung("Anforderungsmatrix")
+    logger.info(f"Anforderungsmatrix ist: \n{anforderung[0]}\n{anforderung[1]}\n{anforderung[2]}\n")
 
     deadlock_erkennung()
 
