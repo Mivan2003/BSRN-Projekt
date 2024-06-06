@@ -7,6 +7,7 @@ parser = argparse.ArgumentParser(description='Deadlock Simulator')
 parser.add_argument('-l', '--logfile', type=str, default='simulator.log', help='Logdatei')
 parser.add_argument('-mode', '--input_mode', type=str, choices=['s', 'd'], required=True,
                     help="Eingabemodus: 's' für selbst eingeben, 'd' für Datei")
+parser.add_argument('-r', '--resource', type=int, nargs=3, help="Ressourcenvektor (nur bei --input_mode s)")
 parser.add_argument('-f', '--file', type=str, help='Datei zum Einlesen des Ressourcenvektors')
 parser.add_argument('-bm', '--belegungsmatrix', type=str, help='Belegungsmatrixdatei')
 parser.add_argument('-am', '--anforderungsmatrix', type=str, help='Anforderungsmatrixdatei')
@@ -30,7 +31,7 @@ def mode():
     if args.input_mode == "s":
         # Erstellung des Ressourcenvektors durch eigene Eingabe
         print("\nGeben Sie nun die Ressourcen ein: ")
-        eResource = [int(input("Klasse 1: ")), int(input("Klasse 2: ")), int(input("Klasse 3: "))]
+        eResource = args.resource
         print(f"\nDer Ressourcenvektor ist: {eResource}\n")
         logger.info("Selbst Eingabe wird gewählt...")
         logger.info(f"Ressourcenvektor eingegeben: {eResource}\n")
