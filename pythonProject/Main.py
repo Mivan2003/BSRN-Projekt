@@ -116,7 +116,7 @@ def matrix_erstellung(matrix):
             ausgefuehrt2 = True
             return matrix
         else:
-            print(f"Die {matrix}s Matrix besteht aus 3 Prozessen und 3 Klassen. "
+            print(f"Die {matrix} besteht aus 3 Prozessen und 3 Klassen. "
                   "Bitte geben Sie nun die Matrix an:")
             logger.info("Matrix wird selbst erstellt werden...")
             # allgemeine Belegungsliste
