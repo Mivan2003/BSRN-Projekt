@@ -33,6 +33,7 @@ def mode():
         eResource = [int(input("Klasse 1: ")), int(input("Klasse 2: ")), int(input("Klasse 3: "))]
         print(f"\nDer Ressourcenvektor ist: {eResource}\n")
         logger.info("Selbst Eingabe wird gewählt...")
+        logger.info(f"Ressourcenvektor eingegeben: {eResource}\n")
 
     elif args.input_mode == "d":
         # Erstellung des Ressourcenvektors mithilfe einer Datei
@@ -44,13 +45,12 @@ def mode():
             eResource = [int(line.strip()) for line in lines]
         print(f"\nDer Ressourcenvektor ist: {eResource}\n")
         logger.info("Datei wird gewählt...")
+        logger.info(f"Ressourcenvektor eingegeben: {eResource}\n")
 
     else:
         print("Eingabe war falsch")
         logger.info("Die Eingabe war falsch, der Benutzer soll es erneut versuchen...")
 
-
-logger.info(f"Ressourcenvektor eingegeben: {eResource}\n")
 
 # Erstellung der Klassen
 klasse1 = []
@@ -84,6 +84,7 @@ def add_ressource(klasse):
 
 ausgefuehrt = False
 ausgefuehrt2 = False
+
 
 def matrix_erstellung(matrix):
     global ausgefuehrt
