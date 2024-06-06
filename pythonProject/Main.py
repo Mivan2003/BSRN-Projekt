@@ -13,9 +13,8 @@ parser.add_argument('-am', '--anforderungsmatrix', type=str, help='Anforderungsm
 args = parser.parse_args()
 
 # Logging-Konfiguration für Logdatei-Dokumentation
-logging.basicConfig(
-    filename=args.logfile, level=logging.INFO)
-logger = logging.getLogger('DeadlockSimulator')
+logging.basicConfig(filename=args.logfile, level=logging.INFO)
+logger = logging.getLogger()
 
 # Die noch leere liste des Ressourcenvektors
 eResource = []
