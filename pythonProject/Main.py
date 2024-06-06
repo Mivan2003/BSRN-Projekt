@@ -30,7 +30,7 @@ def mode():
     # Abfrage, ob man den Ressourcenvektor selbst eingibt oder durch eine Datei zugreift
     if args.input_mode == "s":
         # Erstellung des Ressourcenvektors durch eigene Eingabe
-        print("\nGeben Sie nun die Ressourcen ein: ")
+
         eResource = args.resource
         print(f"\nDer Ressourcenvektor ist: {eResource}\n")
         logger.info("Selbst Eingabe wird gewählt...")
